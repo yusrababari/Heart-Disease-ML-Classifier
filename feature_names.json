@@ -1,1 +1,24 @@
-["age", "sex", "trestbps", "chol", "fbs", "thalach", "exang", "oldpeak", "ca", "AgeGroup", "cp_1", "cp_2", "cp_3", "restecg_1", "restecg_2", "slope_1", "slope_2", "thal_2.0", "thal_3.0"]
+[
+  "age",
+  "sex",
+  "trestbps",
+  "chol",
+  "fbs",
+  "thalach",
+  "exang",
+  "oldpeak",
+  "ca",
+  "weight",
+  "smoking",
+  "diabetes",
+  "AgeGroup",
+  "cp_1",
+  "cp_2",
+  "cp_3",
+  "restecg_1",
+  "restecg_2",
+  "slope_1",
+  "slope_2",
+  "thal_2.0",
+  "thal_3.0"
+]

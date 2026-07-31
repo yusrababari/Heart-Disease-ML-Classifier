@@ -1,0 +1,12 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+node_modules
+dist
+dist-ssr
+*.log
+100%
+submissions
+heart_disease_prediction.ipynb

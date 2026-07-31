@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local generated artifacts (keep heart_model.pkl / feature_names.json / data/ for Vercel)
+submissions/
+*.log
+100%
+
