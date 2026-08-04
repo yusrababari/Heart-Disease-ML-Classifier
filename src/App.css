@@ -7,13 +7,13 @@
 
 /* ------------------------------------------------------------ header */
 
-.header {
+.header { /* topbar/title */
   position: sticky;
   top: 0;
   z-index: 20;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  background: rgba(13, 5, 24, 0.72);
+  background: rgba(143, 137, 151, 0.72);
   border-bottom: 1px solid var(--border);
 }
 
