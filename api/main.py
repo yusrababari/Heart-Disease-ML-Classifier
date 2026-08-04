@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
 
-import lightgbm as lgb
+import numpy as np
+import onnxruntime as rt
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -19,7 +20,8 @@ app.add_middleware(
 )
 
 # Load saved assets
-model = lgb.Booster(model_file=str(ROOT / "heart_model.txt"))
+_sess = rt.InferenceSession(str(ROOT / "heart_model.onnx"))
+_input_name = _sess.get_inputs()[0].name
 with open(ROOT / "feature_names.json", "r") as f:
     feature_names = json.load(f)
 
@@ -54,15 +56,14 @@ def get_graphs():
 @app.post("/api/predict")
 def predict(data: HeartData):
     """Accepts user feature inputs and returns model prediction."""
-    # Build feature array in exact column order expected by the model
     try:
-        row = [[data.features[name] for name in feature_names]]
+        row = np.array([[data.features[name] for name in feature_names]], dtype=np.float32)
     except KeyError as e:
         raise HTTPException(status_code=422, detail=f"Missing feature: {e}")
 
-    # lgb.Booster.predict() returns raw probabilities for binary classification
-    probability = float(model.predict(row)[0])
-    prediction = int(probability >= 0.5)
+    labels, probas = _sess.run(None, {_input_name: row})
+    prediction = int(labels[0])
+    probability = float(probas[0][1])
 
     return {
         "prediction": prediction,
