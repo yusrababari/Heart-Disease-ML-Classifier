@@ -176,7 +176,7 @@
   height: 40px;
   border-radius: 99px;
   background: var(--gradient);
-  box-shadow: 0 0 14px rgba(168, 85, 247, 0.6);
+  box-shadow: 0 0 14px rgba(238, 99, 192, 0.6);/* main colour theme */
 }
 
 .section-title {
