@@ -125,7 +125,7 @@
   font-size: clamp(28px, 4.5vw, 40px);
   font-weight: 700;
   letter-spacing: -0.025em;
-  background: linear-gradient(180deg, #fff 20%, var(--purple-bright) 90%);
+  background: linear-gradient(180deg, #ffaeed 20%, var(--purple-bright) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
