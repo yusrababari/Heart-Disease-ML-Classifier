@@ -12,8 +12,7 @@
   ],
   "functions": {
     "api/index.py": {
-      "maxDuration": 60,
-      "includeFiles": "heart_model.pkl,feature_names.json,data/train.csv,data/test.csv"
+      "maxDuration": 60
     }
   }
 }
