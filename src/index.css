@@ -48,10 +48,10 @@ body {
 body {
   min-height: 100svh;
   background:
-    radial-gradient(900px 500px at 90% -5%, rgba(249, 168, 196, 0.35), transparent 60%),
-    radial-gradient(700px 400px at -5% 25%, rgba(244, 139, 174, 0.2), transparent 60%),
-    radial-gradient(600px 400px at 50% 105%, rgba(232, 98, 154, 0.12), transparent 60%),
-    linear-gradient(180deg, #f0eeee 0%, #ebe6e6 100%);
+    radial-gradient(900px 500px at 90% -5%, rgba(255, 48, 120, 0.35), transparent 60%),
+    radial-gradient(700px 400px at -5% 25%, rgba(243, 39, 107, 0.2), transparent 60%),
+    radial-gradient(600px 400px at 50% 105%, rgba(240, 121, 170, 0.76), transparent 60%),
+    linear-gradient(180deg, #f7c0e5 0%, #ebadcf 100%);
   background-attachment: fixed;
   color: var(--text);
 }
