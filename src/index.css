@@ -1,31 +1,36 @@
 :root {
-  --bg-deep: #0d0518;
-  --bg-mid: #170b2b;
-  --bg-soft: #21103c;
-  --glass: rgba(255, 255, 255, 0.05);
-  --glass-strong: rgba(255, 255, 255, 0.08);
-  --border: rgba(196, 145, 255, 0.18);
-  --border-strong: rgba(216, 170, 255, 0.35);
-  --text: #e6ddf2;
-  --text-muted: #a78bbf;
-  --text-dim: #7d6599;
-  --purple: #a855f7;
-  --purple-bright: #c084fc;
-  --pink: #e879f9;
-  --violet: #7c3aed;
-  --gradient: linear-gradient(135deg, #c084fc 0%, #a855f7 45%, #7c3aed 100%);
-  --gradient-pink: linear-gradient(135deg, #f0abfc 0%, #d946ef 100%);
-  --low: #34d399;
-  --high: #fb7185;
-  --shadow: 0 24px 60px -12px rgba(109, 40, 217, 0.45);
+ :root {
+  --bg-deep: #f0eeee;
+  --bg-mid: #ede9e9;
+  --bg-soft: #e8e3e3;
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.72);
+  --border: rgba(236, 155, 185, 0.28);
+  --border-strong: rgba(236, 155, 185, 0.55);
+  --text: #3d2535;
+  --text-muted: #8c5a6f;
+  --text-dim: #b48898;
+  --pink: #f48bae;
+  --pink-bright: #f9a8c4;
+  --pink-deep: #e8629a;
+  --rose: #f06292;
+  --blush: #fce4ec;
+  --gradient: linear-gradient(135deg, #f9a8c4 0%, #f48bae 45%, #e8629a 100%);
+  --gradient-pink: linear-gradient(135deg, #fbb6ce 0%, #f48bae 50%, #e8629a 100%);
+  --low: #5ebc8c;
+  --high: #e8629a;
+  --shadow: 0 24px 60px -12px rgba(240, 98, 146, 0.18);
   --sans: 'Poppins', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --purple: #ec4899;
+  --purple-bright: #f472b6;
+}
 
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.5;
   color: var(--text);
   background: var(--bg-deep);
-  color-scheme: dark;
+  color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -43,10 +48,10 @@ body {
 body {
   min-height: 100svh;
   background:
-    radial-gradient(1000px 600px at 85% -10%, rgba(124, 58, 237, 0.35), transparent 60%),
-    radial-gradient(800px 500px at -10% 20%, rgba(168, 85, 247, 0.22), transparent 60%),
-    radial-gradient(700px 500px at 50% 110%, rgba(217, 70, 239, 0.16), transparent 60%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+    radial-gradient(900px 500px at 90% -5%, rgba(249, 168, 196, 0.35), transparent 60%),
+    radial-gradient(700px 400px at -5% 25%, rgba(244, 139, 174, 0.2), transparent 60%),
+    radial-gradient(600px 400px at 50% 105%, rgba(232, 98, 154, 0.12), transparent 60%),
+    linear-gradient(180deg, #f0eeee 0%, #ebe6e6 100%);
   background-attachment: fixed;
   color: var(--text);
 }
@@ -72,7 +77,7 @@ select {
 }
 
 ::selection {
-  background: rgba(168, 85, 247, 0.4);
+  background: rgba(244, 139, 174, 0.35);
 }
 
 ::-webkit-scrollbar {
@@ -83,10 +88,10 @@ select {
   background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--violet), var(--purple));
+  background: linear-gradient(var(--pink-deep), var(--pink));
   border-radius: 8px;
   border: 2px solid var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(var(--purple), var(--pink));
+  background: linear-gradient(var(--pink), var(--pink-bright));
 }
