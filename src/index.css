@@ -1,5 +1,4 @@
 :root {
- :root {
   --bg-deep: #f0eeee;
   --bg-mid: #ede9e9;
   --bg-soft: #e8e3e3;
@@ -25,6 +24,7 @@
   --purple-bright: #f472b6;
 }
 
+body {
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.5;
