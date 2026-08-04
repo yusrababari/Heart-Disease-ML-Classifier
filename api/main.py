@@ -2,12 +2,10 @@ import json
 from pathlib import Path
 
 import joblib
-import pandas as pd
-from fastapi import FastAPI
+import numpy as np
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-from graphs import generate_graphs
 
 ROOT = Path(__file__).resolve().parent
 
@@ -26,6 +24,14 @@ model = joblib.load(ROOT / "heart_model.pkl")
 with open(ROOT / "feature_names.json", "r") as f:
     feature_names = json.load(f)
 
+# Load pre-generated graphs (produced by generate_graphs_static.py)
+_graphs_path = ROOT / "graphs.json"
+if _graphs_path.exists():
+    with open(_graphs_path, "r", encoding="utf-8") as f:
+        _cached_graphs = json.load(f)
+else:
+    _cached_graphs = []
+
 
 class HeartData(BaseModel):
     features: dict  # Example: {"age": 63, "sex": 1, "cp": 3, ...}
@@ -41,20 +47,26 @@ def get_features():
 
 @app.get("/api/graphs")
 def get_graphs():
-    """Regenerates all notebook visualizations and returns them as data URIs."""
-    return {"graphs": generate_graphs()}
+    """Returns pre-generated notebook visualizations as data URIs."""
+    if not _cached_graphs:
+        raise HTTPException(status_code=503, detail="Graphs not available. Run generate_graphs_static.py locally and commit api/graphs.json.")
+    return {"graphs": _cached_graphs}
 
 @app.post("/api/predict")
 def predict(data: HeartData):
     """Accepts user feature inputs and returns model prediction."""
-    # Format features into DataFrame with exact column order
-    df = pd.DataFrame([data.features])[feature_names]
-    prediction = model.predict(df)[0]
+    # Build feature array in exact column order expected by the model
+    try:
+        X = np.array([[data.features[name] for name in feature_names]])
+    except KeyError as e:
+        raise HTTPException(status_code=422, detail=f"Missing feature: {e}")
+
+    prediction = model.predict(X)[0]
 
     # If your model supports predict_proba
     probability = None
     if hasattr(model, "predict_proba"):
-        probability = float(model.predict_proba(df)[0][1])
+        probability = float(model.predict_proba(X)[0][1])
 
     return {
         "prediction": int(prediction),
