@@ -1,8 +1,7 @@
 import json
 from pathlib import Path
 
-import joblib
-import numpy as np
+import lightgbm as lgb
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -20,7 +19,7 @@ app.add_middleware(
 )
 
 # Load saved assets
-model = joblib.load(ROOT / "heart_model.pkl")
+model = lgb.Booster(model_file=str(ROOT / "heart_model.txt"))
 with open(ROOT / "feature_names.json", "r") as f:
     feature_names = json.load(f)
 
@@ -57,18 +56,15 @@ def predict(data: HeartData):
     """Accepts user feature inputs and returns model prediction."""
     # Build feature array in exact column order expected by the model
     try:
-        X = np.array([[data.features[name] for name in feature_names]])
+        row = [[data.features[name] for name in feature_names]]
     except KeyError as e:
         raise HTTPException(status_code=422, detail=f"Missing feature: {e}")
 
-    prediction = model.predict(X)[0]
-
-    # If your model supports predict_proba
-    probability = None
-    if hasattr(model, "predict_proba"):
-        probability = float(model.predict_proba(X)[0][1])
+    # lgb.Booster.predict() returns raw probabilities for binary classification
+    probability = float(model.predict(row)[0])
+    prediction = int(probability >= 0.5)
 
     return {
-        "prediction": int(prediction),
+        "prediction": prediction,
         "probability": probability
     }
