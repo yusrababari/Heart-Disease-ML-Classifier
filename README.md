@@ -1,6 +1,7 @@
 # Heart Disease ML Classifier
 
 HeartScope — a heart disease risk predictor with a purple-themed React UI and a FastAPI + LightGBM backend. Deploys as a **single Vercel project**: the Vite frontend is served as static files and the FastAPI app runs as a Python serverless function.
+<img width="1892" height="932" alt="image" src="https://github.com/user-attachments/assets/f405b7b5-831e-4fc4-a1f6-6b301da0acc8" />
 
 ## Features
 
