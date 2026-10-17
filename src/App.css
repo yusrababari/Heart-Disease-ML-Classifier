@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap");
+
 /* ------------------------------------------------------------ tokens
    Replace your existing :root block with this one. The legacy names at
    the bottom keep any other stylesheet that still references them working. */
@@ -25,11 +27,14 @@
   --success: #3fb883;
   --success-soft: rgba(63, 184, 131, 0.1);
 
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
 
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --font-body: 'IBM Plex Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  --shadow: none;
 
   /* legacy aliases */
   --gradient: var(--accent);
@@ -47,6 +52,15 @@
   flex-direction: column;
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
 }
 
 /* ------------------------------------------------------------ header */
@@ -82,15 +96,16 @@
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: var(--accent);
   color: #fff;
 }
 
 .brand-title {
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color: var(--text);
   line-height: 1.2;
 }
@@ -145,9 +160,10 @@
 }
 
 .hero-title {
-  font-size: clamp(26px, 4vw, 34px);
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.005em;
   line-height: 1.2;
   color: var(--text);
   margin-bottom: 8px;
@@ -168,35 +184,28 @@
 }
 
 .section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 24px 26px;
-  box-shadow: var(--shadow);
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border-strong);
+  border-radius: 0;
+  padding: 24px 0 12px;
 }
 
 .section-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  display: block;
   margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
 }
 
 .section-marker {
-  flex-shrink: 0;
-  width: 3px;
-  height: 36px;
-  border-radius: 2px;
-  background: var(--accent);
+  display: none;
 }
 
 .section-title {
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 20px;
   font-weight: 600;
   color: var(--text);
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 
 .section-blurb {
@@ -355,7 +364,6 @@ select.field-input option {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--surface);
-  box-shadow: var(--shadow);
   animation: fade-in 0.25s ease;
 }
 
@@ -378,10 +386,10 @@ select.field-input option {
 }
 
 .result-pill {
-  padding: 5px 12px;
-  border-radius: 999px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
-  font-size: 13.5px;
+  font-size: 13px;
   color: #fff;
 }
 
@@ -394,7 +402,8 @@ select.field-input option {
 }
 
 .result-title {
-  font-size: 17px;
+  font-family: var(--font-display);
+  font-size: 20px;
   font-weight: 600;
   color: var(--text);
 }
@@ -423,15 +432,15 @@ select.field-input option {
 }
 
 .gauge-track {
-  height: 8px;
-  border-radius: 999px;
+  height: 6px;
+  border-radius: 2px;
   background: var(--border);
   overflow: hidden;
 }
 
 .gauge-fill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: 2px;
   background: var(--accent);
   transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -464,16 +473,25 @@ select.field-input option {
 
 .modal-backdrop {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   z-index: 100;
-  background: rgba(8, 10, 14, 0.75);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  width: min(46vw, 520px);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  animation: fade-in 0.2s ease;
+  pointer-events: none;
+  animation: slide-in 0.25s ease;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes fade-in {
@@ -488,16 +506,17 @@ select.field-input option {
 .modal {
   position: relative;
   width: 100%;
-  max-width: 1200px;
-  max-height: 90svh;
+  height: 100%;
+  max-height: none;
+  max-width: none;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
   background: var(--bg-mid);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 30px 70px -20px rgba(0, 0, 0, 0.7);
+  border-left: 1px solid var(--border-strong);
+  border-radius: 0;
+  box-shadow: -16px 0 40px -24px rgba(0, 0, 0, 0.7);
   overflow: hidden;
-  animation: fade-in 0.2s ease;
 }
 
 .modal-header {
@@ -510,10 +529,11 @@ select.field-input option {
 }
 
 .modal-title {
-  font-size: 19px;
-  font-weight: 650;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
   color: var(--text);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .modal-subtitle {
@@ -582,8 +602,8 @@ select.field-input option {
 
 .graph-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .graph-card {
@@ -614,7 +634,29 @@ select.field-input option {
   border-top: 1px solid var(--border);
 }
 
+/* Shift page content left while the graphs panel is open */
+@media (min-width: 900px) {
+  body:has(.modal-backdrop) .header-content,
+  body:has(.modal-backdrop) .main,
+  body:has(.modal-backdrop) .footer {
+    margin-right: min(46vw, 520px);
+    max-width: none;
+    width: auto;
+  }
+
+  body:has(.modal-backdrop) .header-content,
+  body:has(.modal-backdrop) .main {
+    margin-left: 0;
+  }
+}
+
 /* -------------------------------------------------------- responsive */
+
+@media (max-width: 899px) {
+  .modal-backdrop {
+    width: 100%;
+  }
+}
 
 @media (max-width: 720px) {
   .header-content {
@@ -632,7 +674,7 @@ select.field-input option {
   }
 
   .section {
-    padding: 18px 16px 20px;
+    padding: 20px 0 8px;
   }
 
   .section-grid {
