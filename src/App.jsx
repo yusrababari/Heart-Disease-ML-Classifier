@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -172,33 +172,8 @@ function buildPayload(form) {
 
 function HeartIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true">
-      <path
-        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-        fill="url(#heartGrad)"
-      />
-      <defs>
-        <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#e879f9" />
-          <stop offset="100%" stopColor="#a855f7" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-}
-
-function ChartsIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-      <path d="M4 13h6v8H4v-8zM10 3h6v18h-6V3zM16 8h6v13h-6V8z" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff" aria-hidden="true">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
     </svg>
   );
 }
@@ -279,82 +254,72 @@ function ResultCard({ result }) {
   );
 }
 
-function GraphsModal({ open, onClose }) {
+function GraphsPanel() {
   const [graphs, setGraphs] = useState(null);
   const [error, setError] = useState(null);
-  const loaded = useRef(false);
+  const [attempt, setAttempt] = useState(0);
 
-  const fetchGraphs = useCallback(() => {
-    if (loaded.current) return;
-    loaded.current = true;
+  // Load the charts as soon as the page opens (and again on retry).
+  useEffect(() => {
+    let cancelled = false;
     setError(null);
+    setGraphs(null);
     axios
       .get(`${API_URL}/graphs`)
-      .then((res) => setGraphs(res.data.graphs || []))
+      .then((res) => {
+        if (!cancelled) setGraphs(res.data.graphs || []);
+      })
       .catch((err) => {
         console.error('Failed to load graphs:', err);
-        setError('Could not load graphs. Make sure the backend server is running.');
+        if (!cancelled) {
+          setError('Could not load graphs. Make sure the backend server is running.');
+        }
       });
-  }, []);
-
-  useEffect(() => {
-    if (open) fetchGraphs();
-  }, [open, fetchGraphs]);
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (open) {
-      window.addEventListener('keydown', onKey);
-      document.body.style.overflow = 'hidden';
-    }
     return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      cancelled = true;
     };
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [attempt]);
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <div>
-            <h2 className="modal-title">Notebook Visualizations</h2>
-            <p className="modal-subtitle">
-              All analysis charts regenerated from the training data
-            </p>
-          </div>
-          <button className="modal-close" onClick={onClose} aria-label="Close graphs">
-            <CloseIcon />
-          </button>
-        </div>
-
-        <div className="modal-body">
-          {error ? (
-            <div className="modal-state">
-              <p>{error}</p>
-            </div>
-          ) : !graphs ? (
-            <div className="modal-state">
-              <div className="spinner" />
-              <p>Generating charts, this may take a few seconds...</p>
-            </div>
-          ) : (
-            <div className="graph-grid">
-              {graphs.map((graph) => (
-                <figure key={graph.title} className="graph-card">
-                  <img src={graph.image} alt={graph.title} loading="lazy" />
-                  <figcaption>{graph.title}</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
+    <aside className="graphs-panel" aria-label="Notebook visualizations">
+      <div className="panel-header">
+        <div>
+          <h2 className="panel-title">Notebook Visualizations</h2>
+          <p className="panel-subtitle">
+            Analysis charts regenerated from the training data
+          </p>
         </div>
       </div>
-    </div>
+
+      <div className="panel-body">
+        {error ? (
+          <div className="panel-state">
+            <p>{error}</p>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={() => setAttempt((n) => n + 1)}
+            >
+              Try again
+            </button>
+          </div>
+        ) : !graphs ? (
+          <div className="panel-state">
+            <div className="spinner" />
+            <p>Generating charts, this may take a few seconds...</p>
+          </div>
+        ) : (
+          <div className="graph-grid">
+            {graphs.map((graph) => (
+              <figure key={graph.title} className="graph-card">
+                <img src={graph.image} alt={graph.title} loading="lazy" />
+                <figcaption>{graph.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </aside>
   );
 }
 
@@ -363,7 +328,6 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [graphsOpen, setGraphsOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -404,71 +368,68 @@ function App() {
               <p className="brand-subtitle">Intelligent heart disease risk predictor</p>
             </div>
           </div>
-          <button className="graphs-button" onClick={() => setGraphsOpen(true)}>
-            <ChartsIcon />
-            <span>View All Graphs</span>
-          </button>
         </div>
       </header>
 
-      <main className="main">
-        <div className="hero-copy">
-          <h2 className="hero-title">Assess your heart health</h2>
-          <p className="hero-subtitle">
-            Fill in the details below and our machine learning model will estimate your risk of heart disease.
-          </p>
-        </div>
-
-        <form className="form" onSubmit={handleSubmit}>
-          {FORM_FIELDS.map((group) => (
-            <section className="section" key={group.section}>
-              <div className="section-head">
-                <span className="section-marker" />
-                <div>
-                  <h3 className="section-title">{group.section}</h3>
-                  <p className="section-blurb">{group.blurb}</p>
-                </div>
-              </div>
-              <div className="section-grid">
-                {group.fields.map((field) => (
-                  <Field
-                    key={field.key}
-                    field={field}
-                    value={formData[field.key]}
-                    onChange={handleChange}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-
-          {error && <div className="form-error">{error}</div>}
-
-          <div className="form-actions">
-            <button type="submit" className="primary-button" disabled={loading}>
-              {loading ? (
-                <span className="button-loading">
-                  <span className="spinner spinner-inline" />
-                  Predicting...
-                </span>
-              ) : (
-                'Predict Risk'
-              )}
-            </button>
-            <button type="button" className="ghost-button" onClick={handleReset}>
-              Reset
-            </button>
+      <div className="layout">
+        <main className="main">
+          <div className="hero-copy">
+            <h2 className="hero-title">Assess your heart health</h2>
+            <p className="hero-subtitle">
+              Fill in the details below and our machine learning model will estimate your risk of heart disease.
+            </p>
           </div>
-        </form>
 
-        {result && <ResultCard result={result} />}
-      </main>
+          <form className="form" onSubmit={handleSubmit}>
+            {FORM_FIELDS.map((group) => (
+              <section className="section" key={group.section}>
+                <div className="section-head">
+                  <div>
+                    <h3 className="section-title">{group.section}</h3>
+                    <p className="section-blurb">{group.blurb}</p>
+                  </div>
+                </div>
+                <div className="section-grid">
+                  {group.fields.map((field) => (
+                    <Field
+                      key={field.key}
+                      field={field}
+                      value={formData[field.key]}
+                      onChange={handleChange}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {error && <div className="form-error">{error}</div>}
+
+            <div className="form-actions">
+              <button type="button" className="ghost-button" onClick={handleReset}>
+                Reset
+              </button>
+              <button type="submit" className="primary-button" disabled={loading}>
+                {loading ? (
+                  <span className="button-loading">
+                    <span className="spinner spinner-inline" />
+                    Predicting...
+                  </span>
+                ) : (
+                  'Predict Risk'
+                )}
+              </button>
+            </div>
+          </form>
+
+          {result && <ResultCard result={result} />}
+        </main>
+
+        <GraphsPanel />
+      </div>
 
       <footer className="footer">
-        <p>Powered by LightGBM · FastAPI · React — visualization data regenerated live from the notebook</p>
+        <p>Built with LightGBM, FastAPI and React. Charts are regenerated from the training data.</p>
       </footer>
-
-      <GraphsModal open={graphsOpen} onClose={() => setGraphsOpen(false)} />
     </div>
   );
 }
